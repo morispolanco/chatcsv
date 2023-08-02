@@ -4,7 +4,8 @@ import openai
 from datetime import datetime
 
 # Define your API key for OpenAI
-openai.api_key = 'your-api-key'
+openai.api_key = os.environ.get("OPENAI_API_KEY")
+
 
 
 @st.cache(allow_output_mutation=True, show_spinner=False)
