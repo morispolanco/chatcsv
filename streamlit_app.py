@@ -22,6 +22,7 @@ def save_query(df, query):
     df = df.append(new_row, ignore_index=True)
     return df
 
+
 def get_gpt3_response(query):
     response = openai.ChatCompletion.create(
       model="gpt-3.5-turbo",
