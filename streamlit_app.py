@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import openai
 from datetime import datetime
+import os
 
 # Define your API key for OpenAI
 openai.api_key = os.environ.get("OPENAI_API_KEY")
