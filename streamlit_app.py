@@ -14,20 +14,20 @@ def load_data(csv_file):
         df = pd.concat(pd.read_csv(csv_file, chunksize=chunksize))
         return df
 
-def save_message(df, message):
+def save_query(df, query):
     if df is None:
-        df = pd.DataFrame(columns=["Message"])
+        df = pd.DataFrame(columns=["Query"])
         
-    new_row = {"Message": message}
+    new_row = {"Query": query}
     df = df.append(new_row, ignore_index=True)
     return df
 
-def get_gpt3_response(message):
+def get_gpt3_response(query):
     response = openai.ChatCompletion.create(
       model="gpt-3.5-turbo",
       messages=[
             {"role": "system", "content": "You are a friendly assistant."},
-            {"role": "user", "content": message},
+            {"role": "user", "content": query},
         ]
     )
     return response['choices'][0]['message']['content']
@@ -39,14 +39,14 @@ def run_chat():
     chat_history = load_data(uploaded_file)
 
     if chat_history is not None:
-        st.subheader('Enter your messages')
+        st.subheader('Enter your queries')
         
-        message = st.text_input('Message')
+        query = st.text_input('Query')
 
         if st.button('Send'):
-            chat_history = save_message(chat_history, message)
-            gpt3_response = get_gpt3_response(message)
-            chat_history = save_message(chat_history, gpt3_response)
+            chat_history = save_query(chat_history, query)
+            gpt3_response = get_gpt3_response(query)
+            chat_history = save_query(chat_history, gpt3_response)
 
         # Display chat history
         st.table(chat_history)
