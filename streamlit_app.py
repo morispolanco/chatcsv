@@ -34,6 +34,14 @@ def get_gpt3_response(query):
     )
     return response['choices'][0]['message']['content']
 
+def analyze_dataframe(df, query):
+    # Check if the query is asking for the highest value
+    if 'dato más alto' in query:
+        max_val = df['your_column'].max()
+        return f"El valor más alto es {max_val}"
+    else:
+        return get_gpt3_response(query)
+
 def run_chat():
     st.title('Streamlit Chat App')
 
@@ -49,7 +57,7 @@ def run_chat():
 
         if st.button('Send'):
             chat_history = save_query(chat_history, query)
-            gpt3_response = get_gpt3_response(query)
+            gpt3_response = analyze_dataframe(chat_history, query)
             chat_history = save_query(chat_history, gpt3_response)
 
         # Display chat history
