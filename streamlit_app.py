@@ -13,15 +13,16 @@ def load_data(csv_file):
         chunksize = 5  # Choose a value that fits your needs
         df = pd.concat(pd.read_csv(csv_file, chunksize=chunksize))
         return df
+    else:
+        return None
 
 def save_query(df, query):
+    new_row = pd.DataFrame({"Query": [query]})
     if df is None:
-        df = pd.DataFrame(columns=["Query"])
-        
-    new_row = {"Query": query}
-    df = df.append(new_row, ignore_index=True)
+        df = new_row
+    else:
+        df = pd.concat([df, new_row], ignore_index=True)
     return df
-
 
 def get_gpt3_response(query):
     response = openai.ChatCompletion.create(
@@ -38,7 +39,9 @@ def run_chat():
 
     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
     chat_history = load_data(uploaded_file)
-
+    if chat_history is None:
+        chat_history = pd.DataFrame(columns=["Query"])
+    
     if chat_history is not None:
         st.subheader('Enter your queries')
         
